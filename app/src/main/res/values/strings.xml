@@ -1,4 +1,19 @@
 <resources>
-    <string name="app_name">AS3_HappyMeals</string>
+    <string name="app_name">Assignment2_s3740975</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="action_home">Home</string>
+    <string name="action_map">Map</string>
+    <string name="action_info">Info</string>
+    <string name="action_logout">Logout</string>
+
+
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="sign_in">Login/Signup</string>
+    <string name="welcome_have_a_nice_day">Welcome, have a nice day!!!</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign Up</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="login_fragment">Login</string>
 </resources>
