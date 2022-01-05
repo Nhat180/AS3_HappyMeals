@@ -100,3 +100,15 @@ output.json
 # with Android Studio 3.5.
 
 # End of https://www.toptal.com/developers/gitignore/api/android
+.gradle/checksums/checksums.lock
+.gradle/checksums/sha1-checksums.bin
+.gradle/7.0.2/fileHashes/fileHashes.bin
+*.bin
+.gradle/7.0.2/fileHashes/fileHashes.bin
+*.bin
+.gradle/7.0.2/fileHashes/fileHashes.lock
+*.lock
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+*.lock
+.gradle/buildOutputCleanup/outputFiles.bin
+*.bin
