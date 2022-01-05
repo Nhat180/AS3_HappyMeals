@@ -5,11 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {
+    private String userName;
     private String email;
     private String isAdmin = "0";
     private List<String> siteRegistered = new ArrayList<>();
 
     public User() {
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public User(String email) {
@@ -43,7 +52,8 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "email='" + email + '\'' +
+                "userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
                 ", isAdmin='" + isAdmin + '\'' +
                 ", siteRegistered=" + siteRegistered +
                 '}';
