@@ -112,3 +112,7 @@ output.json
 *.lock
 .gradle/buildOutputCleanup/outputFiles.bin
 *.bin
+.gradle/checksums/checksums.lock
+.gradle/buildOutputCleanup/outputFiles.bin
+.gradle/7.0.2/fileHashes/fileHashes.lock
+.gradle/7.0.2/fileHashes/fileHashes.bin
