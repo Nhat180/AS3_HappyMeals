@@ -30,6 +30,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SearchView;
+
+import com.example.as3_happymeals.model.Site;
+import com.example.as3_happymeals.model.User;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -61,9 +64,11 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
     private BottomNavigationView bottomNavigationView;
@@ -71,6 +76,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected LocationRequest mLocationRequest;
     private FloatingActionButton fab;
     private static final int MY_PERMISSION_REQUEST_LOCATION = 99;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseUser currentUser;
+    private User user = new User();
+    private Site site = new Site(); // Site information
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,34 +114,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Toast.makeText(getApplicationContext(), "Map", Toast.LENGTH_SHORT ).show();
                         break;
                     case R.id.action_logout:
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
-                        builder.setTitle("Logout Confirmation!").
+                        AlertDialog.Builder logoutAlert = new AlertDialog.Builder(MapsActivity.this);
+                        logoutAlert.setTitle("Logout Confirmation!").
                                 setMessage("Do you want to logout?");
                         // back to login screen
-                        builder.setPositiveButton("Yes",
+                        logoutAlert.setPositiveButton("Yes",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        Intent i = new Intent(getApplicationContext(),
-                                                LoginActivity.class);
-                                        startActivity(i);
+                                        firebaseAuth.signOut();
+                                        startActivity(new Intent(MapsActivity.this, HomePageActivity.class));
                                         finish();
-//
-//                                            firebaseAuth.signOut();
-//                                            startActivity(new Intent(MapsActivity.this, WelcomeActivity.class));
-//                                            finish();
-
                                     }
                                 });
 
                         // Cancel
-                        builder.setNegativeButton("No",
+                        logoutAlert.setNegativeButton("No",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
                                 });
-                        AlertDialog alert11 = builder.create();
-                        alert11.show();
+                        AlertDialog alertLogOutDialog = logoutAlert.create();
+                        alertLogOutDialog.show();
                         break;
                 }
                 return true;

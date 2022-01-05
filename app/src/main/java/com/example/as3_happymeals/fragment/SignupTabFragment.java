@@ -63,6 +63,7 @@ public class SignupTabFragment extends Fragment {
 
                 // If all checks are correct, then allow users to create an account and sign in to the map
                 if (isValid) {
+                    String nameStr = username.getText().toString();
                     String emailStr = email.getText().toString();
                     String passStr = pass.getText().toString();
                     firebaseAuth.createUserWithEmailAndPassword(emailStr,passStr)
@@ -76,6 +77,7 @@ public class SignupTabFragment extends Fragment {
                                     DocumentReference df = db.collection("users")
                                             .document(user.getUid());
                                     Map<String, Object> userData = new HashMap<>();
+                                    userData.put("userName", nameStr);
                                     userData.put("email", emailStr);
                                     userData.put("isAdmin", "0");
                                     userData.put("siteRegistered", Collections.emptyList());
