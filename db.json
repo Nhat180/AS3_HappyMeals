@@ -1,3 +1,13 @@
 {
-  "sites": []
+  "sites": [
+    {
+      "id": "2NqcHOqTiSSPoamNxQUC3GmXxgW2",
+      "name": "RMIT",
+      "leaderName": "aquira180@gmail.com",
+      "latitude": 10.730743191065034,
+      "longitude": 106.69444609433413,
+      "totalPeople": 0,
+      "totalComment": 0
+    }
+  ]
 }
