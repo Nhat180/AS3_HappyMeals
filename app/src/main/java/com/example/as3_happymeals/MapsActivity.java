@@ -15,6 +15,8 @@ import android.annotation.SuppressLint;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.widget.ViewPager2;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -31,8 +33,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SearchView;
 
+import com.example.as3_happymeals.adapter.MapAdapter;
 import com.example.as3_happymeals.model.Site;
 import com.example.as3_happymeals.model.User;
+import com.example.as3_happymeals.transform.DepthPageTransformer;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -73,6 +77,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int MY_PERMISSION_REQUEST_LOCATION = 99;
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+    private ViewPager2 viewPager2;
     private BottomNavigationView bottomNavigationView;
     protected FusedLocationProviderClient client;
     protected LocationRequest mLocationRequest;
@@ -87,6 +92,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+//        https://www.youtube.com/watch?v=sd4x1DKBSqk&t=1461s
+
+        viewPager2 = findViewById(R.id.view_pager_2);
+
+        MapAdapter mapAdapter = new MapAdapter(this);
+
+        viewPager2.setAdapter(mapAdapter);
+
         currentUser = firebaseAuth.getCurrentUser(); // Get the current user login
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
@@ -97,7 +110,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
 //        //https://www.youtube.com/watch?v=ywqCTCR2a0w
         bottomNavigationView = findViewById(R.id.bottom_nav_view);
         bottomNavigationView.setBackground(null);
@@ -106,14 +118,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.action_home:
+                        viewPager2.setCurrentItem(0);
                         Toast.makeText(getApplicationContext(), "Home page", Toast.LENGTH_SHORT ).show();
                         break;
 
                     case R.id.action_info:
+                        viewPager2.setCurrentItem(1);
                         Toast.makeText(getApplicationContext(), "Info", Toast.LENGTH_SHORT ).show();
                         break;
 
                     case R.id.action_map:
+                        viewPager2.setCurrentItem(2);
                         Toast.makeText(getApplicationContext(), "Map", Toast.LENGTH_SHORT ).show();
                         break;
                     case R.id.action_logout:
@@ -142,6 +157,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         break;
                 }
                 return true;
+            }
+        });
+
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                switch (position){
+                    case 0:
+                        bottomNavigationView.getMenu().findItem(R.id.action_home).setChecked(true);
+                        break;
+                    case 1:
+                        bottomNavigationView.getMenu().findItem(R.id.action_info).setChecked(true);
+                        break;
+                    case 2:
+                        bottomNavigationView.getMenu().findItem(R.id.action_map).setChecked(true);
+                        break;
+                }
             }
         });
 

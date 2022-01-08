@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AS3_HappyMeals">
         <activity
+            android:name=".MapActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddLocationActivity"
             android:exported="false" />
         <activity
