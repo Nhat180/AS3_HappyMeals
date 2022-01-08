@@ -11,8 +11,9 @@
 
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
-    <string name="sign_in">Login/Signup</string>
-    <string name="welcome_have_a_nice_day">Welcome, have a nice day!!!</string>
+    <string name="sign_in">Login / Signup</string>
+    <string name="welcome">Welcome</string>
+    <string name="have_a_nice_day">Have a nice day!</string>
     <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign Up</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="login_fragment">Login</string>
