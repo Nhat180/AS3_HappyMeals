@@ -213,6 +213,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(@NonNull Marker marker) {
+                startActivity(new Intent(MapsActivity.this, ViewProductsActivity.class));
+            }
+        });
+
     }
 
     // Enable my location view on map
