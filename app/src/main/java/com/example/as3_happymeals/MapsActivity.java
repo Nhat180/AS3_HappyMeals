@@ -106,7 +106,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.action_home:
-                        Toast.makeText(getApplicationContext(), "HOme page", Toast.LENGTH_SHORT ).show();
+                        Toast.makeText(getApplicationContext(), "Home page", Toast.LENGTH_SHORT ).show();
                         break;
 
                     case R.id.action_info:
@@ -216,7 +216,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(@NonNull Marker marker) {
-                startActivity(new Intent(MapsActivity.this, ViewProductsActivity.class));
+                //startActivity(new Intent(MapsActivity.this, ViewProductsActivity.class));
             }
         });
 

@@ -31,12 +31,12 @@ public class SplashActivity extends AppCompatActivity {
         lottieAnimationView = findViewById(R.id.lottie);
         slogan = findViewById(R.id.slogan);
         description = findViewById(R.id.description);
-        bg.animate().translationY(-2500).setDuration(1000).setStartDelay(5000);
-        txtHappy.animate().translationY(-2000).setDuration(1000).setStartDelay(5000);
-        txtMeal.animate().translationY(-2000).setDuration(1000).setStartDelay(5000);
-        slogan.animate().translationY(1500).setDuration(1000).setStartDelay(5000);
-        lottieAnimationView.animate().translationY(1500).setDuration(1000).setStartDelay(5000);
-        description.animate().translationY(1500).setDuration(1000).setStartDelay(5000);
+        bg.animate().translationY(-2500).setDuration(1000).setStartDelay(4000);
+        txtHappy.animate().translationY(-2000).setDuration(1000).setStartDelay(4000);
+        txtMeal.animate().translationY(-2000).setDuration(1000).setStartDelay(4000);
+        slogan.animate().translationY(1500).setDuration(1000).setStartDelay(4000);
+        lottieAnimationView.animate().translationY(1500).setDuration(1000).setStartDelay(4000);
+        description.animate().translationY(1500).setDuration(1000).setStartDelay(4000);
 
 
         new Handler().postDelayed(new Runnable(){
@@ -45,7 +45,7 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(new Intent(SplashActivity.this, HomePageActivity.class));
                 finish();
             }
-        }, 6000);
+        }, 5000);
     }
 
 
