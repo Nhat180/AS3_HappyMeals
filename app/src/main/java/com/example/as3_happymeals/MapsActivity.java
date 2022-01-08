@@ -69,13 +69,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+    public static final String SITE_API_URL = "http://10.0.2.2:3000/sites";
+    private static final int MY_PERMISSION_REQUEST_LOCATION = 99;
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
     private BottomNavigationView bottomNavigationView;
     protected FusedLocationProviderClient client;
     protected LocationRequest mLocationRequest;
     private FloatingActionButton fab;
-    private static final int MY_PERMISSION_REQUEST_LOCATION = 99;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser;
@@ -85,6 +86,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        currentUser = firebaseAuth.getCurrentUser(); // Get the current user login
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -157,6 +160,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
         enableMyLocation();
+        new GetSites().execute();
     }
 
     // Get current location
@@ -194,12 +198,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
         startLocationUpdate();
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng latLng) {
+                if (currentUser == null) {
+                    startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+                } else {
+                    Intent intent = new Intent(MapsActivity.this, AddLocationActivity.class);
+                    intent.putExtra("latitude", latLng.latitude);
+                    intent.putExtra("longitude", latLng.longitude);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(@NonNull Marker marker) {
+                startActivity(new Intent(MapsActivity.this, ViewProductsActivity.class));
+            }
+        });
+
     }
 
+    // Enable my location view on map
     private void enableMyLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -210,6 +233,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    // Request permission from user to open map
     private void requestPermission() {
         ActivityCompat.requestPermissions(MapsActivity.this, new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_LOCATION);
@@ -228,6 +252,79 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }, null);
     }
+
+    // Customized site markers
+    private BitmapDescriptor bitmapDescriptor (Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth()
+                , vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    private void addMarkerFromHttpHandler (JSONObject jsonObject) throws JSONException {
+        LatLng position = new LatLng(
+                jsonObject.getDouble("latitude"),
+                jsonObject.getDouble("longitude"));
+        mMap.addMarker(new MarkerOptions()
+                .position(position)
+                .title(jsonObject.getString("id"))
+                .snippet(jsonObject.getString("name")));
+    }
+
+    private class GetSites extends AsyncTask<Void, Void, Void> {
+        String jsonString = "";
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            jsonString = HttpHandler.getRequest(SITE_API_URL);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            try {
+                JSONArray jsonArray = new JSONArray(jsonString);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    addMarkerFromHttpHandler(jsonObject);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+//    private class GetASite extends AsyncTask<Void, Void, Void> {
+//        String jsonString = "";
+//
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//            jsonString = HttpHandler.getRequest(SITE_API_URL + "/" + markerID);
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+//            super.onPostExecute(aVoid);
+//            try {
+//                JSONObject jsonObject = new JSONObject(jsonString);
+//                site.setName(jsonObject.getString("name"));
+//                site.setLeaderUid(jsonObject.getString("id"));
+//                site.setLeaderName(jsonObject.getString("leaderName"));
+//                site.setLatitude(jsonObject.getDouble("latitude"));
+//                site.setLongitude(jsonObject.getDouble("longitude"));
+//                site.setTotalPeople(jsonObject.getInt("totalPeople"));
+//                site.setTotalComment(jsonObject.getInt("totalComment"));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
 }
 

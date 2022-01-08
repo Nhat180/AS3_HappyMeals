@@ -1,70 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MapsActivity"
-    android:background="@color/invisible"
     >
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager2"
+    
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="675dp" />
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true">
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:backgroundTint="@color/green168"
-        app:fabCradleMargin="10dp"
-        app:fabCradleRoundedCornerRadius="50dp"
-        >
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:backgroundTint="@color/black"
+            app:fabCradleMargin="10dp"
+            app:fabCradleRoundedCornerRadius="50dp">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_nav_view"
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_nav_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:menu="@menu/menu_bottom_nav"
+                android:background="@android:color/transparent"
+                android:layout_marginRight="20dp"
+                app:labelVisibilityMode="labeled"
+                app:itemTextColor="@color/custom_color_bottom_nav"
+                app:itemIconTint="@color/custom_color_bottom_nav" />
+        </com.google.android.material.bottomappbar.BottomAppBar>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:menu="@menu/menu_bottom_nav"
-            android:background="@android:color/transparent"
-            android:layout_marginRight="20dp"
-            app:labelVisibilityMode="labeled"
-            app:itemTextColor="@color/custom_color_bottom_nav"
-            app:itemIconTint="@color/custom_color_bottom_nav"
-
+            android:id="@+id/my_position"
+            android:src="@drawable/my_location"
+            app:maxImageSize="40dp"
+            android:backgroundTint="@color/white"
+            app:layout_anchor="@id/bottom_nav"
             />
-    </com.google.android.material.bottomappbar.BottomAppBar>
+        
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/my_position"
-        android:src="@drawable/my_location"
-        android:tint="@color/green168"
-        app:maxImageSize="40dp"
-        android:backgroundTint="@color/white"
-        app:layout_anchor="@id/bottom_nav"
-        />
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <RelativeLayout
+        android:id="@+id/mainmap"
         android:layout_width="match_parent"
-        android:layout_height="703dp" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/footer">
 
-    <!--    <SearchView-->
-    <!--        android:id="@+id/sv_location"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:elevation="5dp"-->
-    <!--        android:iconifiedByDefault="false"-->
-    <!--        android:queryHint="Search..." />-->
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!--    <SearchView-->
+        <!--        android:id="@+id/sv_location"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:elevation="5dp"-->
+        <!--        android:iconifiedByDefault="false"-->
+        <!--        android:queryHint="Search..." />-->
+
+    </RelativeLayout>
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</RelativeLayout>
 
 
 
