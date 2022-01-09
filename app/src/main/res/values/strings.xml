@@ -3,8 +3,8 @@
     <string name="title_activity_maps">MapsActivity</string>
     <string name="enter_your_email">Enter your email</string>
     <string name="sign_up">Sign Up</string>
-    <string name="action_home">Home</string>
     <string name="action_map">Map</string>
+    <string name="action_list">List</string>
     <string name="action_info">Info</string>
     <string name="action_logout">Logout</string>
 
