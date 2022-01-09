@@ -43,6 +43,7 @@ public class LoginTabFragment extends Fragment {
         fPass = root.findViewById(R.id.forget_pass);
         login = root.findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 isValidEmail(email);
