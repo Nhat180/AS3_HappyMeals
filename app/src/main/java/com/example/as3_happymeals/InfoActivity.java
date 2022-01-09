@@ -8,36 +8,63 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.as3_happymeals.model.Site;
 import com.example.as3_happymeals.model.User;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
 public class InfoActivity extends AppCompatActivity {
-
+    private TextView email, username;
+    private Button gotoLogin;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser;
     private User user = new User();
-    private Site site = new Site(); // Site information
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
+        email = findViewById(R.id.info_email);
+        username = findViewById(R.id.info_username);
+        gotoLogin = findViewById(R.id.info_login);
+
         currentUser = firebaseAuth.getCurrentUser(); // Get the current user login
 
+        if (currentUser == null) {
+            email.setVisibility(View.GONE);
+            username.setVisibility(View.GONE);
+            gotoLogin.setVisibility(View.VISIBLE);
+        } else {
+            email.setVisibility(View.VISIBLE);
+            username.setVisibility(View.VISIBLE);
+            gotoLogin.setVisibility(View.GONE);
+            email.setText(currentUser.getEmail());
+            DocumentReference docRef = db.collection("users").document(currentUser.getUid());
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(@NonNull DocumentSnapshot documentSnapshot) {
+                    user = documentSnapshot.toObject(User.class);
+                    username.setText(user.getUserName());
+                }
+            });
+        }
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
-
         bottomNavigationView.setSelectedItemId(R.id.action_info);
-
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
