@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CampaignActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:textAlignment="center"
+        android:text="Welcome to our Home"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:tabSelectedTextColor="@color/black"
+        />
+    <!--            <com.google.android.material.tabs.TabItem-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:icon="@drawable/add_pac"-->
+    <!--                android:text="Package"/>-->
+    <!--            <com.google.android.material.tabs.TabItem-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:icon="@drawable/comment_list"-->
+    <!--                android:text="Comment"/>-->
+
+    <!--            <com.google.android.material.tabs.TabItem-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:icon="@drawable/report"-->
+    <!--                android:text="Report"/>-->
+
+    <!--    </com.google.android.material.tabs.TabLayout>-->
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+
+    <!--        <ImageButton-->
+    <!--            android:id="@+id/addButton"-->
+    <!--            android:layout_width="136dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:background="@null"-->
+    <!--            android:src="@drawable/add_pac" />-->
+
+    <!--        <ImageButton-->
+    <!--            android:id="@+id/commentList"-->
+    <!--            android:layout_width="137dp"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:layout_gravity="right"-->
+    <!--            android:background="@null"-->
+    <!--            android:src="@drawable/comment_list" />-->
+
+    <!--        <ImageButton-->
+    <!--            android:id="@+id/logoutBtn"-->
+    <!--            android:layout_width="140dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="right"-->
+    <!--            android:background="@null"-->
+    <!--            android:src="@drawable/report"-->
+    <!--            />-->
+
+
+
+
+
+
+
+</LinearLayout>

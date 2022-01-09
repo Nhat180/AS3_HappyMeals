@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AS3_HappyMeals">
         <activity
+            android:name=".CampaignActivity"
+            android:exported="false" />
+        <activity
             android:name=".ListActivity"
             android:exported="false" />
         <activity
