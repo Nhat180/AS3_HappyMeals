@@ -45,11 +45,13 @@ public class InfoActivity extends AppCompatActivity {
                     case R.id.action_map:
                         startActivity(new Intent(getApplicationContext(), MapsActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     case R.id.action_info:
                         return true;
                     case R.id.action_list:
                         startActivity(new Intent(getApplicationContext(), ListActivity.class));
+                        finish();
                         overridePendingTransition(0, 0);
                         return true;
                     case R.id.action_logout:
