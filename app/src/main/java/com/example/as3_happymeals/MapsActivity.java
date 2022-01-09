@@ -99,10 +99,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     case R.id.action_info:
                         startActivity(new Intent(getApplicationContext(), InfoActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     case R.id.action_list:
                         startActivity(new Intent(getApplicationContext(), ListActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     case R.id.action_logout:
                         AlertDialog.Builder logoutAlert = new AlertDialog.Builder(MapsActivity.this);

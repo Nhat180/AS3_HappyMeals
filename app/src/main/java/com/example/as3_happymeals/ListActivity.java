@@ -44,10 +44,12 @@ public class ListActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.action_map:
                         startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                        finish();
                         overridePendingTransition(0, 0);
                         return true;
                     case R.id.action_info:
                         startActivity(new Intent(getApplicationContext(), InfoActivity.class));
+                        finish();
                         overridePendingTransition(0, 0);
                         return true;
                     case R.id.action_list:
