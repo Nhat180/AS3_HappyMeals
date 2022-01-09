@@ -31,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
         mTabLayout.addTab(mTabLayout.newTab().setText("Login"));
         mTabLayout.addTab(mTabLayout.newTab().setText("Signup"));
         mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+
         mLoginAdapter = new LoginAdapter(this);
         mViewPager.setAdapter(mLoginAdapter);
 
