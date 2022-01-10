@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/titletextview"
+        android:text="Add new package"
+        android:textColor="@color/white"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_margin="20dp"/>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="63dp"
+                android:layout_height="wrap_content"
+                android:text="Package" />
+            <EditText
+                android:id="@+id/packageName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="product"
+                android:inputType="textPersonName" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quantity" />
+            <EditText
+                android:id="@+id/packageQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="quantity"
+                android:inputType="number" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="111dp"
+                android:layout_height="wrap_content"
+                android:text="Owner" />
+            <EditText
+                android:id="@+id/packageOwner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="owner"
+                android:inputType="textPersonName" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description" />
+            <EditText
+                android:id="@+id/packageDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="description"
+                android:inputType="textPersonName" />
+        </TableRow>
+
+    </TableLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/savePackageBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Package"
+        android:layout_gravity="center"
+        android:theme="@style/Theme.MaterialComponents"
+        android:onClick="onConfirmAddPackage"/>
+</LinearLayout>
+
+
