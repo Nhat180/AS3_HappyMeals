@@ -1,7 +1,7 @@
 package com.example.as3_happymeals.model;
 
 public class Comment {
-    private int id;
+    private String id;
     private String name;
     private String textCom;
 
@@ -9,17 +9,17 @@ public class Comment {
 
     }
 
-    public Comment(int id, String name, String textCom) {
+    public Comment(String id, String name, String textCom) {
         this.id = id;
         this.name = name;
         this.textCom = textCom;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
