@@ -5,16 +5,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 import android.annotation.SuppressLint;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -66,7 +67,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String querySearch;
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
-    private ViewPager2 viewPager2;
     private BottomNavigationView bottomNavigationView;
     protected FusedLocationProviderClient client;
     protected LocationRequest mLocationRequest;
@@ -78,6 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private FloatingActionButton fab;
     private AlertDialog.Builder builder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
 
 //        https://www.youtube.com/watch?v=ywqCTCR2a0w
         bottomNavigationView = findViewById(R.id.bottom_nav_view);
@@ -159,6 +161,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        registerService(); // Register broadcast service
     }
 
     // Enable current location and get all sites on map
@@ -313,6 +316,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }, null);
     }
 
+    // Broadcast Receiver
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_BATTERY_CHANGED)) {
+                int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+                int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+                float batteryPct = level / (float) scale;
+                if (batteryPct < 0.2) {
+                    sendBatteryAlert();
+                }
+            }
+        }
+    };
+
+
+    // Register to Receiver
+    private void registerService() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(broadcastReceiver,intentFilter);
+    }
+
+    // Alert low battery
+    private void sendBatteryAlert(){
+        AlertDialog.Builder batteryBuilder = new AlertDialog.Builder(this);
+            batteryBuilder.setTitle("LOW BATTERY!!!")
+                    .setMessage("Your phone battery is under 20%")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            AlertDialog alertDialog = batteryBuilder.create();
+            alertDialog.show();
+    }
+
+
     // Customized site markers
     private BitmapDescriptor bitmapDescriptor (Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
@@ -325,6 +367,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
+    // Add Marker for sites from RESTAPI
     private void addMarkerFromHttpHandler (JSONObject jsonObject) throws JSONException {
         LatLng position = new LatLng(
                 jsonObject.getDouble("latitude"),
@@ -335,6 +378,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .snippet(jsonObject.getString("name")));
     }
 
+    // Get All Sites
     private class GetSites extends AsyncTask<Void, Void, Void> {
         String jsonString = "";
 
@@ -359,6 +403,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    // Get a specific site
     private class GetASite extends AsyncTask<Void, Void, Void> {
         String jsonString = "";
 
