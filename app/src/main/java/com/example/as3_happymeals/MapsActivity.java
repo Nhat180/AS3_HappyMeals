@@ -47,35 +47,53 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.as3_happymeals.databinding.ActivityMapsBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     public static final String SITE_API_URL = "http://10.0.2.2:3000/sites";
     private static final int MY_PERMISSION_REQUEST_LOCATION = 99;
+    public static String role;
+    private String markerID;
+    private String querySearch;
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
     private ViewPager2 viewPager2;
     private BottomNavigationView bottomNavigationView;
     protected FusedLocationProviderClient client;
     protected LocationRequest mLocationRequest;
-    private FloatingActionButton fab;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser;
-    private User user = new User();
-    private Site site = new Site(); // Site information
+    public static User user = new User(); // User information
+    public static Site site = new Site(); // Site information
+
+    private FloatingActionButton fab;
+    private AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        currentUser = firebaseAuth.getCurrentUser(); // Get the current user login
+        // Get the current user login
+        currentUser = firebaseAuth.getCurrentUser();
+        if (currentUser != null) {
+            DocumentReference docRef = db.collection("users").document(currentUser.getUid());
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    user = documentSnapshot.toObject(User.class); // Get user detail info
+                }
+            });
+        }
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -85,11 +103,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-//        //https://www.youtube.com/watch?v=ywqCTCR2a0w
+//        https://www.youtube.com/watch?v=ywqCTCR2a0w
         bottomNavigationView = findViewById(R.id.bottom_nav_view);
-
         bottomNavigationView.setSelectedItemId(R.id.action_map);
-
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -145,7 +161,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    // Get all sites on map
+    // Enable current location and get all sites on map
     @Override
     protected void onResume() {
         super.onResume();
@@ -203,10 +219,64 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public void onInfoWindowClick(@NonNull Marker marker) {
-                //startActivity(new Intent(MapsActivity.this, ViewProductsActivity.class));
+            public boolean onMarkerClick(@NonNull Marker marker) {
+                if (currentUser == null) {
+                    startActivity(new Intent(MapsActivity.this, LoginActivity.class));
+                } else {
+                    markerID = marker.getTitle();
+                    new GetASite().execute();
+                    if (user.getIsAdmin().equals("0")
+                        && !currentUser.getUid().equals(marker.getTitle())) {
+                        role = "0"; // set role (0 is normal user)
+                        // Already joining the selected site
+                        if (user.getSiteRegistered().contains(marker.getTitle())) {
+                            Intent intent = new Intent(MapsActivity.this,CampaignActivity.class);
+                            startActivity(intent);
+                        } else { // First time join the site, register to the site
+                            builder.setTitle(marker.getSnippet())
+                                    .setMessage("Do you want to join this site campaign?")
+                                    .setCancelable(true)
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //Register to the site (WRITE)
+                                            DocumentReference docUser = db.collection("users")
+                                                    .document(currentUser.getUid());
+                                            docUser.update("siteRegistered",
+                                                    FieldValue.arrayUnion(marker.getTitle()));
+
+                                            DocumentReference docSite = db.collection("sites")
+                                                    .document(marker.getTitle());
+                                            docSite.update("userRegistered",
+                                                    FieldValue.arrayUnion(currentUser.getEmail()));
+
+                                            site.setTotalPeople(site.getTotalPeople() + 1);
+                                            new PutSite().execute();
+                                        }
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    }).show();
+
+                        }
+                    }
+                    else { // Leader and Admin access the site
+                        if (currentUser.getUid().equals(marker.getTitle())) {
+                            role = "2"; // Leader
+                        } else {
+                            role = "1"; // Admin
+                        }
+                        Intent intent = new Intent(MapsActivity.this, CampaignActivity.class);
+                        startActivity(intent);
+                    }
+
+                }
+                return true;
             }
         });
 
@@ -289,32 +359,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-//    private class GetASite extends AsyncTask<Void, Void, Void> {
-//        String jsonString = "";
-//
-//        @Override
-//        protected Void doInBackground(Void... voids) {
-//            jsonString = HttpHandler.getRequest(SITE_API_URL + "/" + markerID);
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            super.onPostExecute(aVoid);
-//            try {
-//                JSONObject jsonObject = new JSONObject(jsonString);
-//                site.setName(jsonObject.getString("name"));
-//                site.setLeaderUid(jsonObject.getString("id"));
-//                site.setLeaderName(jsonObject.getString("leaderName"));
-//                site.setLatitude(jsonObject.getDouble("latitude"));
-//                site.setLongitude(jsonObject.getDouble("longitude"));
-//                site.setTotalPeople(jsonObject.getInt("totalPeople"));
-//                site.setTotalComment(jsonObject.getInt("totalComment"));
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+    private class GetASite extends AsyncTask<Void, Void, Void> {
+        String jsonString = "";
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            jsonString = HttpHandler.getRequest(SITE_API_URL + "/" + markerID);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            try {
+                JSONObject jsonObject = new JSONObject(jsonString);
+                site.setName(jsonObject.getString("name"));
+                site.setLeaderUid(jsonObject.getString("id"));
+                site.setLeaderName(jsonObject.getString("leaderName"));
+                site.setLatitude(jsonObject.getDouble("latitude"));
+                site.setLongitude(jsonObject.getDouble("longitude"));
+                site.setTotalPeople(jsonObject.getInt("totalPeople"));
+                site.setTotalComment(jsonObject.getInt("totalComment"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Put method to update the total of volunteers
+    private class PutSite extends AsyncTask<Void, Void, Void> {
+        private String status = "";
+        @Override
+        protected Void doInBackground(Void... voids) {
+            status = HttpHandler.putRequest(MapsActivity.SITE_API_URL + "/" + site.getLeaderUid(), site);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+            finish();
+        }
+    }
 
 }
 
