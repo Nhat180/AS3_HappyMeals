@@ -17,11 +17,13 @@
         android:id="@+id/tab_layout1"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        app:tabSelectedTextColor="@color/black" />
+
+        app:tabSelectedTextColor="@color/black"
+        app:tabIndicatorColor="@color/green168"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="477dp" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

@@ -6,12 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MapsActivity">
-    
-    
+
     <RelativeLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="56dp"
         android:layout_alignParentBottom="true">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -40,8 +39,8 @@
             android:layout_alignParentEnd="true"
             android:layout_centerHorizontal="true"
             android:layout_gravity="end|bottom"
-            android:layout_marginEnd="177dp"
-            android:layout_marginBottom="17dp"
+            android:layout_marginEnd="175dp"
+            android:layout_marginBottom="14dp"
             android:backgroundTint="@color/white"
             android:src="@drawable/my_location"
             app:maxImageSize="40dp" />
@@ -55,6 +54,19 @@
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="0dp"
             android:layout_marginBottom="0dp" />
+
+        <SearchView
+            android:id="@+id/searchBtn"
+            android:layout_width="300dp"
+            android:layout_height="45dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="55dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="55dp"
+            android:background="@drawable/custom_search_bar"
+            android:queryHint="Search Site Name" />
 
         <!--    <SearchView-->
         <!--        android:id="@+id/sv_location"-->
