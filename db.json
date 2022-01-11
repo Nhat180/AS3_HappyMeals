@@ -1,13 +1,22 @@
 {
   "sites": [
     {
-      "id": "2NqcHOqTiSSPoamNxQUC3GmXxgW2",
       "name": "RMIT",
       "leaderName": "aquira180@gmail.com",
       "latitude": 10.730743191065034,
       "longitude": 106.69444609433413,
-      "totalPeople": 0,
-      "totalComment": 0
+      "totalPeople": 2,
+      "totalComment": 0,
+      "id": "2NqcHOqTiSSPoamNxQUC3GmXxgW2"
+    },
+    {
+      "name": "Thang",
+      "leaderName": "thang@gmail.com",
+      "latitude": 10.729102050228306,
+      "longitude": 106.69362232089043,
+      "totalPeople": 1,
+      "totalComment": 0,
+      "id": "M1b8lCxaCFfszLymMHQ49BR29Lt2"
     }
   ]
 }
