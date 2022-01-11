@@ -24,6 +24,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.SearchView;
 
 import com.example.as3_happymeals.model.Site;
 import com.example.as3_happymeals.model.User;
@@ -79,6 +80,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FloatingActionButton fab;
     private AlertDialog.Builder builder;
 
+    private String searching = "";
+    android.widget.SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +106,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        searchView = findViewById(R.id.searchBtn);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searching = query;
+                new GetSearching().execute();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
 
 
 //        https://www.youtube.com/watch?v=ywqCTCR2a0w
@@ -153,6 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        builder = new AlertDialog.Builder(MapsActivity.this);
         fab = findViewById(R.id.my_position);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -380,7 +399,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // Get All Sites
     private class GetSites extends AsyncTask<Void, Void, Void> {
-        String jsonString = "";
+        private String jsonString = "";
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -445,6 +464,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             super.onPostExecute(aVoid);
             startActivity(new Intent(getApplicationContext(), MapsActivity.class));
             finish();
+        }
+    }
+
+    private class GetSearching extends AsyncTask<Void,Void,Void> {
+        String jsonString ="";
+        @Override
+        protected Void doInBackground(Void... voids) {
+            jsonString = HttpHandler.getRequest(SITE_API_URL + "?name_like=" + searching);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid){
+            super.onPostExecute(aVoid);
+
+            try {
+                JSONArray jsonArray = new JSONArray(jsonString);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                LatLng position = new LatLng(
+                        jsonObject.getDouble("latitude"),
+                        jsonObject.getDouble("longitude"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
