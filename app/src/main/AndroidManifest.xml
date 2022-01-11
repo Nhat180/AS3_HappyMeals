@@ -20,10 +20,9 @@
         android:theme="@style/Theme.AS3_HappyMeals">
         <activity
             android:name=".CampaignActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ViewPackageActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
+
         <activity
             android:name=".ListActivity"
             android:exported="false" />
@@ -41,10 +40,11 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <activity
             android:name=".HomePageActivity"
             android:exported="false" />

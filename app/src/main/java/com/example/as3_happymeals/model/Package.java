@@ -1,37 +1,46 @@
 package com.example.as3_happymeals.model;
 
-import io.realm.RealmObject;
 
+public class Package {
 
-public class Package extends RealmObject {
-    String productName;
-    Integer quantity;
-    String owner;
-    String description;
-    long createdTime;
+    private int packageId;
+    private String packageName;
+    private String quantity;
+    private String description;
 
-    public String getProductName() {
-        return productName;
+    public Package(int packageId, String packageName, String quantity, String description) {
+        this.packageId = packageId;
+        this.packageName = packageName;
+        this.quantity = quantity;
+        this.description = description;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public Package(){
+
     }
 
-    public Integer getQuantity() {
+    public int getPackageId() {
+        return packageId;
+    }
+
+    public void setPackageId(int packageId) {
+        this.packageId = packageId;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
     }
 
     public String getDescription() {
@@ -40,13 +49,5 @@ public class Package extends RealmObject {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public long getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(long createdTime) {
-        this.createdTime = createdTime;
     }
 }
