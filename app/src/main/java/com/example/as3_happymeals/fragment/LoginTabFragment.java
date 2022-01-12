@@ -19,6 +19,7 @@ import com.example.as3_happymeals.HomePageActivity;
 import com.example.as3_happymeals.LoginActivity;
 import com.example.as3_happymeals.MapsActivity;
 import com.example.as3_happymeals.R;
+import com.example.as3_happymeals.SplashActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -28,7 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class LoginTabFragment extends Fragment {
     private EditText email, pass;
     private TextView fPass, title;
-    private Button login;
+    private Button login, backBtn;
     private float i=0;
     private boolean isValid = true; // Check value
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -42,6 +43,7 @@ public class LoginTabFragment extends Fragment {
         pass = (EditText) root.findViewById(R.id.pass);
         fPass = root.findViewById(R.id.forget_pass);
         login = root.findViewById(R.id.login);
+        backBtn = root.findViewById(R.id.backBtn);
         login.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -79,6 +81,13 @@ public class LoginTabFragment extends Fragment {
             }
         });
 
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), HomePageActivity.class));
+            }
+        });
+
 
         // Set animation
         title.setTranslationX(800);
@@ -86,18 +95,21 @@ public class LoginTabFragment extends Fragment {
         pass.setTranslationX(800);
         fPass.setTranslationX(800);
         login.setTranslationX(800);
+        backBtn.setTranslationX(800);
 
         title.setAlpha(i);
         email.setAlpha(i);
         pass.setAlpha(i);
         fPass.setAlpha(i);
         login.setAlpha(i);
+        backBtn.setAlpha(i);
 
-        title.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(200).start();
-        email.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(300).start();
-        pass.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(500).start();
-        fPass.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(500).start();
+        title.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(100).start();
+        email.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(200).start();
+        pass.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(300).start();
+        fPass.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(400).start();
         login.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(500).start();
+        backBtn.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(600).start();
 
         return root;
     }
