@@ -34,7 +34,7 @@ import java.util.Map;
 public class SignupTabFragment extends Fragment {
 
     private EditText username,email,pass,rPass;
-    private Button signup;
+    private Button signup, backBtn;
     private TextView title;
     private int i=0;
     private boolean isValid = true; // Check value
@@ -50,7 +50,7 @@ public class SignupTabFragment extends Fragment {
         pass = (EditText) root.findViewById(R.id.pass);
         rPass = (EditText) root.findViewById(R.id.re_pass);
         signup = root.findViewById(R.id.signup);
-
+        backBtn = root.findViewById(R.id.backBtn);
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,12 +96,20 @@ public class SignupTabFragment extends Fragment {
             }
         });
 
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), HomePageActivity.class));
+            }
+        });
+
         title.setTranslationX(800);
         username.setTranslationX(800);
         email.setTranslationX(800);
         pass.setTranslationX(800);
         rPass.setTranslationX(800);
         signup.setTranslationX(800);
+        backBtn.setTranslationX(800);
 
         title.setAlpha(i);
         username.setAlpha(i);
@@ -109,13 +117,15 @@ public class SignupTabFragment extends Fragment {
         pass.setAlpha(i);
         rPass.setAlpha(i);
         signup.setAlpha(i);
+        backBtn.setAlpha(i);
 
-        title.animate().translationX(0).alpha(1).setDuration(700).setStartDelay(200).start();
-        username.animate().translationX(0).alpha(1).setDuration(700).setStartDelay(300).start();
-        email.animate().translationX(0).alpha(1).setDuration(700).setStartDelay(350).start();
+        title.animate().translationX(0).alpha(1).setDuration(700).setStartDelay(100).start();
+        username.animate().translationX(0).alpha(1).setDuration(700).setStartDelay(200).start();
+        email.animate().translationX(0).alpha(1).setDuration(700).setStartDelay(300).start();
         pass.animate().translationX(0).alpha(1).setDuration(700).setStartDelay(400).start();
-        rPass.animate().translationX(0).alpha(1).setDuration(700).setStartDelay(450).start();
-        signup.animate().translationX(0).alpha(1).setDuration(700).setStartDelay(400).start();
+        rPass.animate().translationX(0).alpha(1).setDuration(700).setStartDelay(500).start();
+        signup.animate().translationX(0).alpha(1).setDuration(700).setStartDelay(600).start();
+        backBtn.animate().translationX(0).alpha(1).setDuration(700).setStartDelay(700).start();
 
         return root;
     }
