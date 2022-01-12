@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -42,6 +43,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -92,18 +94,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Get the current user login
-        currentUser = firebaseAuth.getCurrentUser();
-        if (currentUser != null) {
-            DocumentReference docRef = db.collection("users").document(currentUser.getUid());
-            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    user = documentSnapshot.toObject(User.class); // Get user detail info
-                }
-            });
-        }
-
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -111,6 +101,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        // Get the current user login
+        currentUser = firebaseAuth.getCurrentUser();
+
 
         searchView = findViewById(R.id.searchBtn);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -126,6 +121,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return false;
             }
         });
+
+        CheckBox checkBox = findViewById(R.id.checkBox);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    mMap.clear();
+                    new FilterSites().execute();
+                } else {
+                    mMap.clear();
+                    new GetSites().execute();
+                }
+            }
+        });
+
+
+        fab = findViewById(R.id.my_position);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getCurrentLocation();
+            }
+        });
+
+        if (currentUser != null) {
+            DocumentReference docRef = db.collection("users").document(currentUser.getUid());
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    user = documentSnapshot.toObject(User.class); // Get user detail info
+                }
+            });
+        } else {
+            checkBox.setVisibility(View.GONE);
+        }
+
 
 
 //        https://www.youtube.com/watch?v=ywqCTCR2a0w
@@ -177,14 +208,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         builder = new AlertDialog.Builder(MapsActivity.this);
-        fab = findViewById(R.id.my_position);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getCurrentLocation();
-            }
-        });
-
         registerService(); // Register broadcast service
     }
 
@@ -231,21 +254,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
         startLocationUpdate();
-
-        CheckBox checkBox = findViewById(R.id.checkBox);
-
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    mMap.clear();
-                    new FilterCovidTest().execute();
-                } else {
-                    mMap.clear();
-                    new GetSites().execute();
-                }
-            }
-        });
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -394,6 +402,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    // Draw circle on marker
+    private void drawCircle(LatLng latLng) {
+        CircleOptions circleOptions = new CircleOptions().center(latLng)
+                .radius(80).fillColor(Color.argb(50, 168, 218, 206))
+                .strokeColor(Color.GREEN)
+                .strokeWidth(3f);
+        mMap.addCircle(circleOptions);
+    }
+
+
     // Customized site markers
     private BitmapDescriptor bitmapDescriptor (Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
@@ -436,6 +454,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     addMarkerFromHttpHandler(jsonObject);
+
+                    if (currentUser != null) {
+                        if(currentUser.getUid().equals(jsonObject.getString("id"))) {
+                            addMarkerFromHttpHandler(jsonObject);
+                            drawCircle(new LatLng(
+                                    jsonObject.getDouble("latitude"),
+                                    jsonObject.getDouble("longitude"))
+                            );
+                        }
+                    }
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -513,12 +542,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private class FilterCovidTest extends AsyncTask<Void,Void,Void> {
+    private class FilterSites extends AsyncTask<Void,Void,Void> {
         String jsonString ="";
         List<String> siteRegistered = new ArrayList<>();
         @Override
         protected Void doInBackground(Void... voids) {
             siteRegistered = user.getSiteRegistered();
+            siteRegistered.add(currentUser.getUid());
             for (int i = 0; i < siteRegistered.size(); i++){
                 String temp_jsonString = HttpHandler.getRequest(SITE_API_URL + "?id_like=" + siteRegistered.get(i));
                 jsonString = jsonString.concat(temp_jsonString);
@@ -536,6 +566,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 for (int i=0; i < jsonArray.length();i++){
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     addMarkerFromHttpHandler(jsonObject);
+
+                    if (currentUser != null) {
+                        if (currentUser.getUid().equals(jsonObject.getString("id"))) {
+                            drawCircle(new LatLng(
+                                    jsonObject.getDouble("latitude"),
+                                    jsonObject.getDouble("longitude"))
+                            );
+                        }
+                    }
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
