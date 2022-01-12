@@ -3,13 +3,11 @@ package com.example.as3_happymeals.model;
 
 public class Package {
 
-    private int packageId;
     private String packageName;
     private String quantity;
     private String description;
 
-    public Package(int packageId, String packageName, String quantity, String description) {
-        this.packageId = packageId;
+    public Package(String packageName, String quantity, String description) {
         this.packageName = packageName;
         this.quantity = quantity;
         this.description = description;
@@ -19,13 +17,6 @@ public class Package {
 
     }
 
-    public int getPackageId() {
-        return packageId;
-    }
-
-    public void setPackageId(int packageId) {
-        this.packageId = packageId;
-    }
 
     public String getPackageName() {
         return packageName;
