@@ -59,7 +59,6 @@ public class AddLocationActivity extends AppCompatActivity {
                 DocumentReference df = db.collection("sites").document(currentUser.getUid());
                 Map<String, Object> siteData = new HashMap<>();
                 siteData.put("userRegistered", Collections.singletonList("Leader: " + currentUser.getEmail()));
-                siteData.put("package", Collections.emptyList());
                 df.set(siteData);
                 new PostSite().execute();
             }
