@@ -26,12 +26,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.List;
 
 public class InfoActivity extends AppCompatActivity {
+    private TextView titleEmail, titleUserName;
     private TextView email, username;
     private Button gotoLogin;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser;
-    private User user = new User();
+    private User user = MapsActivity.user; 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
