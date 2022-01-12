@@ -16,7 +16,6 @@ public class ReportFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.report_fragment, container, false);
-        textView = root.findViewById(R.id.report);
 
 
         return root;
