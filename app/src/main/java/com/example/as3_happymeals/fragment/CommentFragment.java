@@ -89,7 +89,6 @@ public class CommentFragment extends Fragment {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), site.getLeaderUid(), Toast.LENGTH_SHORT).show();
                 checkField(commentText);
                 if (isValid) {
                     String text = commentText.getText().toString();
