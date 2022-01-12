@@ -24,6 +24,8 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.SearchView;
 
 import com.example.as3_happymeals.model.Site;
@@ -59,6 +61,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     public static final String SITE_API_URL = "http://10.0.2.2:3000/sites";
@@ -227,6 +232,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setZoomControlsEnabled(true);
         startLocationUpdate();
 
+        CheckBox checkBox = findViewById(R.id.checkBox);
+
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    mMap.clear();
+                    new FilterCovidTest().execute();
+                } else {
+                    mMap.clear();
+                    new GetSites().execute();
+                }
+            }
+        });
+
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull LatLng latLng) {
@@ -393,6 +413,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 jsonObject.getDouble("longitude"));
         mMap.addMarker(new MarkerOptions()
                 .position(position)
+                .icon(bitmapDescriptor(MapsActivity.this, R.drawable.site_icon))
                 .title(jsonObject.getString("id"))
                 .snippet(jsonObject.getString("name")));
     }
@@ -486,6 +507,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         jsonObject.getDouble("latitude"),
                         jsonObject.getDouble("longitude"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class FilterCovidTest extends AsyncTask<Void,Void,Void> {
+        String jsonString ="";
+        List<String> siteRegistered = new ArrayList<>();
+        @Override
+        protected Void doInBackground(Void... voids) {
+            siteRegistered = user.getSiteRegistered();
+            for (int i = 0; i < siteRegistered.size(); i++){
+                String temp_jsonString = HttpHandler.getRequest(SITE_API_URL + "?id_like=" + siteRegistered.get(i));
+                jsonString = jsonString.concat(temp_jsonString);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid){
+            super.onPostExecute(aVoid);
+
+            try {
+                JSONArray jsonArray = new JSONArray(jsonString);
+                for (int i=0; i < jsonArray.length();i++){
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    addMarkerFromHttpHandler(jsonObject);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
