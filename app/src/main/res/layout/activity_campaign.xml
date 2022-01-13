@@ -12,18 +12,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
-        android:textAlignment="center"
         android:text="Welcome to our Home"
+        android:textAlignment="center"
+        android:textColor="@color/green168"
         android:textSize="30sp"
         android:textStyle="bold" />
 
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        app:tabSelectedTextColor="@color/black"
-        />
     <!--            <com.google.android.material.tabs.TabItem-->
     <!--                android:layout_width="wrap_content"-->
     <!--                android:layout_height="wrap_content"-->
@@ -43,6 +38,13 @@
 
     <!--    </com.google.android.material.tabs.TabLayout>-->
 
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:tabSelectedTextColor="@color/black"
+        app:tabIndicatorColor="@color/green168"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
