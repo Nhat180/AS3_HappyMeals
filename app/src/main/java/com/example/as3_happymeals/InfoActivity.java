@@ -27,42 +27,59 @@ import java.util.List;
 
 public class InfoActivity extends AppCompatActivity {
     private TextView titleEmail, titleUserName;
-    private TextView email, username;
+    private TextView email, username, role;
     private Button gotoLogin;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser;
-    private User user = MapsActivity.user; 
+    private User user = MapsActivity.user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
+        titleEmail = findViewById(R.id.info_title_email);
+        titleUserName = findViewById(R.id.info_title_username);
+
         email = findViewById(R.id.info_email);
         username = findViewById(R.id.info_username);
+        role = findViewById(R.id.info_role);
         gotoLogin = findViewById(R.id.info_login);
 
         currentUser = firebaseAuth.getCurrentUser(); // Get the current user login
 
         if (currentUser == null) {
+            titleEmail.setVisibility(View.GONE);
+            titleUserName.setVisibility(View.GONE);
             email.setVisibility(View.GONE);
             username.setVisibility(View.GONE);
             gotoLogin.setVisibility(View.VISIBLE);
+
+            role.setText("You still not login");
         } else {
+            titleEmail.setVisibility(View.VISIBLE);
+            titleUserName.setVisibility(View.VISIBLE);
             email.setVisibility(View.VISIBLE);
             username.setVisibility(View.VISIBLE);
             gotoLogin.setVisibility(View.GONE);
+
             email.setText(currentUser.getEmail());
-            DocumentReference docRef = db.collection("users").document(currentUser.getUid());
-            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(@NonNull DocumentSnapshot documentSnapshot) {
-                    user = documentSnapshot.toObject(User.class);
-                    username.setText(user.getUserName());
-                }
-            });
+            username.setText(user.getUserName());
+            if (user.getIsAdmin().equals("0")) {
+                role.setText("User");
+            } else {
+                role.setText("Admin");
+            }
         }
+
+        gotoLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(InfoActivity.this, LoginActivity.class));
+                finish();
+            }
+        });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
         bottomNavigationView.setSelectedItemId(R.id.action_info);
