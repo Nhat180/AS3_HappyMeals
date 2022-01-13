@@ -51,6 +51,8 @@ public class CommentFragment extends Fragment {
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private Site site = MapsActivity.site;
     private User user = MapsActivity.user;
+    private String role = MapsActivity.role;
+    private String roleStr;
     private boolean isValid = true;
 
 
@@ -60,6 +62,12 @@ public class CommentFragment extends Fragment {
         listView = root.findViewById(R.id.list);
         commentText = root.findViewById(R.id.commentInput);
         sendBtn = root.findViewById(R.id.send);
+
+        if (role.equals("2")) {
+            roleStr = "(Leader)";
+        } else if (role.equals("1")) {
+            roleStr = "(Admin)";
+        }
 
         db.collection("sites").document(site.getLeaderUid())
                 .collection("comments").get()
@@ -96,11 +104,12 @@ public class CommentFragment extends Fragment {
                             .collection("comments").document(String.valueOf(site.getTotalComment()));
                     Map<String,Object> commentData = new HashMap<>();
                     commentData.put("id", df.getId());
-                    commentData.put("name", user.getUserName());
+                    commentData.put("name", user.getUserName() + roleStr);
                     commentData.put("textCom", text);
                     df.set(commentData);
 
-                    arrayList.add(new Comment(String.valueOf(site.getTotalComment()),user.getUserName(), text));
+                    arrayList.add(new Comment(String.valueOf(site.getTotalComment()),
+                            user.getUserName() + roleStr, text));
                     adapter = new CommentAdapter(getActivity(), R.layout.comment_layout, arrayList);
                     listView.setAdapter(adapter);
 
