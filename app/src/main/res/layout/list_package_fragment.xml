@@ -23,9 +23,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/addPackBtn"
-        android:layout_width="wrap_content"
+        android:background="@drawable/button"
+        android:layout_width="200dp"
+        android:textColor="@color/white"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
