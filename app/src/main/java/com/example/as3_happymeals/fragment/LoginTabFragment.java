@@ -58,15 +58,20 @@ public class LoginTabFragment extends Fragment {
                             .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                 @Override
                                 public void onSuccess(AuthResult authResult) {
-                                    Toast.makeText(getContext(),
-                                            "Logged Successfully", Toast.LENGTH_SHORT)
-                                            .show();
-                                    Intent intent = new Intent(getActivity(), MapsActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(intent);
-                                    getActivity().finish();
+                                    if (firebaseAuth.getCurrentUser().isEmailVerified()) {
+                                        Toast.makeText(getContext(),
+                                                "Logged Successfully", Toast.LENGTH_SHORT)
+                                                .show();
+                                        Intent intent = new Intent(getActivity(), MapsActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                        getActivity().finish();
+                                    } else {
+                                        Toast.makeText(getContext(),
+                                                "Please verify your email address", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -75,9 +80,7 @@ public class LoginTabFragment extends Fragment {
                                     "Fail to login", Toast.LENGTH_SHORT).show();
                         }
                     });
-
                 }
-
             }
         });
 
