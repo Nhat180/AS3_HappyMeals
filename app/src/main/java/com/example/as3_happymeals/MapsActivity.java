@@ -382,7 +382,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
                 int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
                 float batteryPct = level / (float) scale;
-                if (batteryPct < 0.19) {
+                if (batteryPct == 0.19) {
                     sendBatteryAlert();
                 }
             }

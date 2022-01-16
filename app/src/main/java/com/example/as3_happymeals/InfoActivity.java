@@ -100,28 +100,30 @@ public class InfoActivity extends AppCompatActivity {
                         overridePendingTransition(0, 0);
                         return true;
                     case R.id.action_logout:
-                        AlertDialog.Builder logoutAlert = new AlertDialog.Builder(InfoActivity.this);
-                        logoutAlert.setTitle("Logout Confirmation!").
-                                setMessage("Do you want to logout?");
-                        // back to login screen
-                        logoutAlert.setPositiveButton("Yes",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        firebaseAuth.signOut();
-                                        startActivity(new Intent(InfoActivity.this, HomePageActivity.class));
-                                        finish();
-                                    }
-                                });
+                        if (currentUser != null) {
+                            AlertDialog.Builder logoutAlert = new AlertDialog.Builder(InfoActivity.this);
+                            logoutAlert.setTitle("Logout Confirmation!").
+                                    setMessage("Do you want to logout?");
+                            // back to login screen
+                            logoutAlert.setPositiveButton("Yes",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            firebaseAuth.signOut();
+                                            startActivity(new Intent(InfoActivity.this, HomePageActivity.class));
+                                            finish();
+                                        }
+                                    });
 
-                        // Cancel
-                        logoutAlert.setNegativeButton("No",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                        AlertDialog alertLogOutDialog = logoutAlert.create();
-                        alertLogOutDialog.show();
+                            // Cancel
+                            logoutAlert.setNegativeButton("No",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                            AlertDialog alertLogOutDialog = logoutAlert.create();
+                            alertLogOutDialog.show();
+                        }
                         return false;
                 }
                 return false;
