@@ -7,16 +7,27 @@
     android:orientation="vertical"
     tools:context=".CampaignActivity">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"
-        android:text="Welcome to our Home"
-        android:textAlignment="center"
-        android:textColor="@color/green168"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/campaignBackToMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/back"/>
+        <TextView
+            android:layout_width="330dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:text="Welcome to our site"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
 
 
     <!--            <com.google.android.material.tabs.TabItem-->
