@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.as3_happymeals.model.Site;
 import com.example.as3_happymeals.model.User;
@@ -68,7 +69,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-    public static final String SITE_API_URL = "http://10.0.2.2:3000/sites";
+    public static final String SITE_API_URL = "https://happymeals-app.herokuapp.com/sites";
     private static final int MY_PERMISSION_REQUEST_LOCATION = 99;
     public static String role;
     private String markerID;
@@ -263,10 +264,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (currentUser == null) {
                     startActivity(new Intent(MapsActivity.this, LoginActivity.class));
                 } else {
-                    Intent intent = new Intent(MapsActivity.this, AddLocationActivity.class);
-                    intent.putExtra("latitude", latLng.latitude);
-                    intent.putExtra("longitude", latLng.longitude);
-                    startActivity(intent);
+                    if (user.getIsAdmin().equals("1")) {
+                        Toast.makeText(getApplicationContext(), "Admin cannot create the site", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent intent = new Intent(MapsActivity.this, AddLocationActivity.class);
+                        intent.putExtra("latitude", latLng.latitude);
+                        intent.putExtra("longitude", latLng.longitude);
+                        startActivity(intent);
+                        finish();
+                    }
+
                 }
             }
         });
@@ -286,6 +293,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (user.getSiteRegistered().contains(marker.getTitle())) {
                             Intent intent = new Intent(MapsActivity.this,CampaignActivity.class);
                             startActivity(intent);
+                            finish();
                         } else { // First time join the site, register to the site
                             builder.setTitle(marker.getSnippet())
                                     .setMessage("Do you want to join this site campaign?")
@@ -325,6 +333,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                         Intent intent = new Intent(MapsActivity.this, CampaignActivity.class);
                         startActivity(intent);
+                        finish();
                     }
 
                 }
@@ -373,7 +382,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
                 int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
                 float batteryPct = level / (float) scale;
-                if (batteryPct < 0.2) {
+                if (batteryPct < 0.19) {
                     sendBatteryAlert();
                 }
             }

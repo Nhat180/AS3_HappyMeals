@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.example.as3_happymeals.adapter.CampaignAdapter;
 import com.google.android.material.tabs.TabLayout;
@@ -15,6 +18,7 @@ public class CampaignActivity extends AppCompatActivity {
     private ViewPager2 mViewPager;
     private CampaignAdapter mCampaignAdapter;
     private TabLayout mTabLayout;
+    private ImageButton backToMapBtn;
     final int[] ICONS = new int[]{
             R.drawable.add_pac,
             R.drawable.comment_list,
@@ -54,5 +58,14 @@ public class CampaignActivity extends AppCompatActivity {
                 }
             }
         }).attach();
+
+        backToMapBtn = findViewById(R.id.campaignBackToMap);
+        backToMapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                finish();
+            }
+        });
     }
 }

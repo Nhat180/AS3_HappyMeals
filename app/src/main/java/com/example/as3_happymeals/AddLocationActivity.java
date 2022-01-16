@@ -22,7 +22,7 @@ import java.util.Map;
 public class AddLocationActivity extends AppCompatActivity {
     private EditText siteName;
     private EditText siteLat, siteLong;
-    private Button confirmBtn;
+    private Button confirmBtn, backBtn;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser;
@@ -61,6 +61,16 @@ public class AddLocationActivity extends AppCompatActivity {
                 siteData.put("userRegistered", Collections.singletonList("Leader: " + currentUser.getEmail()));
                 df.set(siteData);
                 new PostSite().execute();
+            }
+        });
+
+
+        backBtn = findViewById(R.id.locationBackToMap);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                finish();
             }
         });
 
