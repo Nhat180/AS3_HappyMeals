@@ -19,8 +19,10 @@ import com.example.as3_happymeals.HomePageActivity;
 import com.example.as3_happymeals.LoginActivity;
 import com.example.as3_happymeals.MapsActivity;
 import com.example.as3_happymeals.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -71,30 +73,47 @@ public class SignupTabFragment extends Fragment {
                                 @Override
                                 public void onSuccess(AuthResult authResult) {
                                     FirebaseUser user = firebaseAuth.getCurrentUser();
-                                    Toast.makeText(getActivity(), "Account Created",
-                                            Toast.LENGTH_SHORT).show();
-                                    // Create data storing in the firestore
-                                    DocumentReference df = db.collection("users")
-                                            .document(user.getUid());
-                                    Map<String, Object> userData = new HashMap<>();
-                                    userData.put("userName", nameStr);
-                                    userData.put("email", emailStr);
-                                    userData.put("isAdmin", "0");
-                                    userData.put("siteRegistered", Collections.emptyList());
-                                    df.set(userData);
-                                    startActivity(new Intent(getActivity(),MapsActivity.class));
-                                    getActivity().finish();
+                                    user.sendEmailVerification()
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful()) {
+                                                        Toast.makeText(getActivity(),
+                                                                "Registered successfully, Please check your email",
+                                                                Toast.LENGTH_SHORT).show();
+                                                        // Create data storing in the firestore
+                                                        DocumentReference df = db.collection("users")
+                                                                .document(user.getUid());
+                                                        Map<String, Object> userData = new HashMap<>();
+                                                        userData.put("userName", nameStr);
+                                                        userData.put("email", emailStr);
+                                                        userData.put("isAdmin", "0");
+                                                        userData.put("siteRegistered", Collections.emptyList());
+                                                        df.set(userData);
+                                                        username.getText().clear();
+                                                        email.getText().clear();
+                                                        pass.getText().clear();
+                                                        rPass.getText().clear();
+//                                                      startActivity(new Intent(getActivity(),MapsActivity.class));
+//                                                      getActivity().finish();
+                                                    } else {
+                                                        Toast.makeText(getActivity(),
+                                                                task.getException().getMessage(),
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), "Failed to create the account",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getActivity(), "Failed to create the account",
+                                        Toast.LENGTH_SHORT).show();
+                                    }
+                            });
+                    }
                 }
-            }
-        });
+            });
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
