@@ -7,8 +7,6 @@
     <string name="action_list">List</string>
     <string name="action_info">Info</string>
     <string name="action_logout">Logout</string>
-
-
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="sign_in">Login / Signup</string>
@@ -19,4 +17,6 @@
     <string name="login_fragment">Login</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="forget_pass"><u>Forget Password?</u></string>
+
 </resources>
