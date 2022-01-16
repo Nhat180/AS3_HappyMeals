@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.appcompat.app.AlertDialog;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -27,12 +27,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginTabFragment extends Fragment {
-    private EditText email, pass;
+    private EditText email, pass, contactEmail;
     private TextView fPass, title;
     private Button login, backBtn;
     private float i=0;
     private boolean isValid = true; // Check value
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private Button sendBtn, cancelButton;
 
     @Nullable
     @Override
@@ -90,6 +91,39 @@ public class LoginTabFragment extends Fragment {
                 startActivity(new Intent(getActivity(), HomePageActivity.class));
             }
         });
+
+
+        fPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog builder = new AlertDialog.Builder(getActivity()).create();
+                View form = LayoutInflater.from(getActivity()).inflate(R.layout.forget_pass_dialog_layout, null);
+                builder.setView(form);
+
+                contactEmail = form.findViewById(R.id.contactEmail);
+                sendBtn = form.findViewById(R.id.sendBtn);
+                cancelButton = form.findViewById(R.id.cancelBtn);
+
+
+                sendBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Toast.makeText(getActivity(),"Verification send",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getActivity(),"Cancel",Toast.LENGTH_SHORT).show();
+                        builder.dismiss();
+                    }
+                });
+                builder.show();
+            }
+        });
+        // new
 
 
         // Set animation
