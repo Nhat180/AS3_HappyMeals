@@ -18,10 +18,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AS3_HappyMeals">
+
+        <activity
+            android:name=".MapsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_maps" />
+
         <activity
             android:name=".CampaignActivity"
             android:exported="false"/>
-
 
         <activity
             android:name=".ListActivity"
@@ -29,9 +34,11 @@
         <activity
             android:name=".InfoActivity"
             android:exported="false" />
+
         <activity
             android:name=".AddLocationActivity"
             android:exported="false" />
+
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
@@ -60,10 +67,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".MapsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_maps" />
     </application>
 
 </manifest>

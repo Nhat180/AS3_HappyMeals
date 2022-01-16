@@ -20,8 +20,10 @@ import com.example.as3_happymeals.LoginActivity;
 import com.example.as3_happymeals.MapsActivity;
 import com.example.as3_happymeals.R;
 import com.example.as3_happymeals.SplashActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -93,6 +95,7 @@ public class LoginTabFragment extends Fragment {
         });
 
 
+        // Reset pass
         fPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,8 +111,23 @@ public class LoginTabFragment extends Fragment {
                 sendBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        isValidEmail(contactEmail);
 
-                        Toast.makeText(getActivity(),"Verification send",Toast.LENGTH_SHORT).show();
+                        if(isValid) {
+                            firebaseAuth.sendPasswordResetEmail(contactEmail.getText().toString())
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(getContext(),
+                                                        "Email sent", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(getContext(),
+                                                        "Fail to send reset pass email", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                        }
                     }
                 });
 
